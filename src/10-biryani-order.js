@@ -35,4 +35,33 @@
  */
 export function biryaniBatchProcessor(orders) {
   // Your code here
+
+  //The edge case empty array:
+  if(!Array.isArray(orders) || orders.length===0) return {
+    totalBatches: 0, 
+    totalPlates: 0, 
+    ordersProcessed: 0
+  } 
+  let result={ totalBatches: 0, totalPlates: 0, ordersProcessed: 0 };
+  let i=0,len=orders.length,totalBatchNeeded=0;
+  do{
+    totalBatchNeeded=0
+    //Invalid orders skipped:
+    if(orders[i]<=0 || !Number.isInteger(orders[i])) {i++;continue;}
+
+     //Here no checking is needed these are default scenarios.
+    result.totalPlates+=orders[i];
+    result.ordersProcessed++;
+
+
+    if(orders[i]<=5){
+      totalBatchNeeded=1;
+    }else{
+      totalBatchNeeded=Math.ceil(orders[i]/5)
+    }
+    result.totalBatches+=totalBatchNeeded;
+    i++;
+  }while(i<len);
+
+  return result;
 }

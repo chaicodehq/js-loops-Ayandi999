@@ -45,5 +45,71 @@
  *   // => [{ name: "Rahul", trainNumber: "12345", class: "sleeper", status: "confirmed" }]
  */
 export function railwayReservation(passengers, trains) {
-  // Your code here
+  //train not found:
+  //Edge casses:
+  if (
+    !Array.isArray(passengers) ||
+    !Array.isArray(trains) ||
+    passengers.length === 0 ||
+    trains.length === 0
+  )
+    return [];
+
+  let result = [];
+  let allocated = false;
+  for (let passenger of passengers) {
+    //checking if the train is even valid:
+    allocated = false;
+    for (let train of trains) {
+      if (train.trainNumber === passenger.trainNumber) {
+        allocated = true;
+        //Check if desired seat is available:
+        if (train.seats[passenger.preferred] > 0) {
+          //Seat is allocates:
+          train.seats[passenger.preferred]--;
+          result.push({
+            name: passenger.name,
+            trainNumber: passenger.trainNumber,
+            class: passenger.preferred,
+            status: "confirmed",
+          });
+          break;
+        }
+        //Check else if fallback is available:
+        else if (train.seats[passenger.fallback] > 0) {
+          //seat allocated:
+          train.seats[passenger.fallback]--;
+          result.push({
+            name: passenger.name,
+            trainNumber: passenger.trainNumber,
+            class: passenger.fallback,
+            status: "confirmed",
+          });
+          break;
+        }
+        //Both classes full wait listed
+        //Wrong train number has been provided.
+        else {
+          result.push({
+            name: passenger.name,
+            trainNumber: passenger.trainNumber,
+            class: passenger.preferred,
+            status: "waitlisted",
+          });
+          break;
+        }
+      }
+    }if (allocated === false) {
+        //else send to waitlist:
+        result.push({
+          name: passenger.name,
+          trainNumber: passenger.trainNumber,
+          class: null,
+          status: "train_not_found",
+        });
+        //no seat allocated:
+      }
+  }
+
+  return result;
 }

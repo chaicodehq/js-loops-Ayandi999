@@ -42,5 +42,38 @@
  *   // => { months: -1, totalPaid: -1, totalInterest: -1 }
  */
 export function calculateEMI(principal, monthlyRate, emi) {
-  // Your code here
+  if (principal <= 0 || monthlyRate < 0 || emi < 0 || typeof principal != 'number') {
+    return { months: -1, totalPaid: -1, totalInterest: -1 };
+  }
+  
+  if (emi <= (principal * monthlyRate)) {
+    return { months: -1, totalPaid: -1, totalInterest: -1 };
+  }
+
+  let month = 0;
+  let totalPaid = 0;
+  let totalInterest = 0;
+
+  while (principal > 0) {
+    month++; // Increment month once at the start of the cycle
+    
+    let interest = principal * monthlyRate;
+    totalInterest += interest;
+    principal += interest;
+
+    if (principal < emi) {
+      totalPaid += principal;
+      principal = 0; // This will break the while loop naturally
+    } else {
+      totalPaid += emi;
+      principal -= emi;
+    }
+    // month++; <--- REMOVE THIS, it's already done at the top!
+  }
+
+  return {
+    months: month,
+    totalPaid: Number(totalPaid.toFixed(2)),
+    totalInterest: Number(totalInterest.toFixed(2))
+  };
 }

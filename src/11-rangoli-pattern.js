@@ -37,4 +37,25 @@
  */
 export function rangoli(n) {
   // Your code here
+  if(!Number.isInteger(n) || n<=0) return [];
+
+  let arr=[]
+  for(let i=1;i<=n;i++){
+    let str=''
+    for(let z=1;z<=n-i;z++) str+=' ';
+    for(let j=1;j<=i;j++){
+      //push n-1-i blank spaces: 
+      str+='* ';     
+    }arr.push(str.trimEnd())
+  }
+
+  for(let i=n-1;i>0;i--){
+    let str=''
+    for(let z=1;z<=n-i;z++) str+=' ';
+    for(let j=1;j<=i;j++){
+      str+='* ';     
+    }arr.push(str.trimEnd())
+  }
+  return arr
+  
 }

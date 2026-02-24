@@ -37,5 +37,66 @@
  *   // Sorted: CSK(3), RCB(1), MI(0)
  */
 export function iplPointsTable(matches) {
-  // Your code here
+  //Checking if the matches array is empty or not an atrray:
+  if (!Array.isArray(matches) || matches.length === 0) return [];
+
+  //Here i am going to store the scores of each team
+  const scores = {}; //
+  /**
+   * [{},{},{}]
+   *
+   */
+
+  //Initializing function for taking care of the initialization:
+  const CheckInit = function (teamName) {
+    if (!scores[teamName]) {
+      scores[teamName] = {
+        team: teamName,
+        played: 0,
+        won: 0,
+        lost: 0,
+        tied: 0,
+        noResult: 0,
+        points: 0,
+      };
+    }
+  };
+
+  for (const i of matches) {
+    //Checing if the teams are not there if so initialize it.
+    CheckInit(i.team1);
+    CheckInit(i.team2);
+
+    //Both teams will have played one match
+    scores[i.team1].played++;
+    scores[i.team2].played++;
+
+    if (i.result === "win") {
+      scores[i.winner].points += 2;
+      scores[i.winner].won++;
+
+      let lostteam = i.winner === i.team1 ? i.team2 : i.team1;
+      scores[lostteam].lost++;
+    } else {
+      //BOth teams will get apoint for tie match
+      scores[i.team1].points++;
+      scores[i.team2].points++;
+
+      if (i.result === "tie") {
+        scores[i.team1].tied++;
+        scores[i.team2].tied++;
+      } else {
+        scores[i.team1].noResult++;
+        scores[i.team2].noResult++;
+      }
+    }
+  }
+
+  const sortedObject = Array.from(
+    Object.values(scores).sort((a, b) => {
+      if (a.points !== b.points) return b.points - a.points;
+      return a.team.localeCompare(b.team);
+    }),
+  );
+  return sortedObject;
 }
